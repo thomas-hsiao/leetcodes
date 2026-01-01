@@ -27,6 +27,61 @@ Constraints:
 
 class Solution {
 private:
+    int by_slope(vector<vector<int>>& points) {
+        int n = points.size();
+        if (n <= 2) return n;
+
+        int ans = 0;
+
+        for (int i = 0; i < n; ++i) {
+
+            std::map<std::pair<int, int>, int> cnts;
+            int dup = 0;
+            int max_pts = 0;
+            for (int j = i + 1; j < n; ++j) {
+                int dx = points[i][0] - points[j][0];
+                int dy = points[i][1] - points[j][1];
+
+                if (dx == 0 && dy == 0) {
+                    ++dup;
+                    continue;
+                }
+
+                int a = dy;
+                int b = dx;
+                if (dx == 0) {
+                    b = 1;
+                } else if (dy == 0) {
+                    a= 0;
+                } else {
+
+                    int g = std::gcd(a, b);
+                    a /= g;
+                    b /= g;
+
+                    if (b < 0) {
+                        a = -a;
+                        b = -b;
+                    }
+                }
+
+                max_pts = std::max(max_pts, ++cnts[{a, b}]);
+            }
+
+            ans = std::max(ans, max_pts + dup + 1);
+        }
+
+        return ans;
+    }
+public:
+    int maxPoints(vector<vector<int>>& points) {
+        return by_slope(points);
+    }
+};
+
+/*
+class Solution {
+private:
     int by_slope(vector<vector<int>>& points, int n) {
         int ans = 2;
         for (int i = 0; i < n; ++i) {
@@ -88,3 +143,4 @@ public:
         return by_slope(points, n);
     }
 };
+*/

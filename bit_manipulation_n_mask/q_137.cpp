@@ -30,14 +30,14 @@ Constraints:
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
-        int first = 0;
-        int second = 0;
+        int seen_1 = 0;
+        int seen_2 = 0;
 
-        for (auto num : nums) {
-            first = ~second & (first ^ num);
-            second = ~first & (second ^ num);
+        for (int n : nums) {
+            seen_1 = (seen_1 ^ n) & (~seen_2);
+            seen_2 = (seen_2 ^ n) & (~seen_1);
         }
 
-        return first;
+        return seen_1;
     }
 };

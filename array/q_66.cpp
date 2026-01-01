@@ -43,22 +43,21 @@ Constraints:
 class Solution {
 public:
     vector<int> plusOne(vector<int>& digits) {
-        bool addOne = true;
+        int n = digits.size();
+        int carry = 0;
+        carry = (digits[n - 1] + 1) / 10;
+        digits[n - 1] = (digits[n - 1] + 1) % 10;
 
-        for (int i = digits.size() - 1; i > -1 ; --i) {
-            if (!addOne) {
-                break;
+        if (!carry) return digits;
 
-            } else if (digits[i] + 1 < 10){
-                digits[i] += 1;
-                addOne = false;
-
-            } else {
-                digits[i] = (digits[i] + 1) % 10;
-            }
+        int old_carry = 0;
+        for (int i = n - 2; i >= 0; --i) {
+            old_carry = carry;
+            carry = (digits[i] + carry) / 10;
+            digits[i] = (digits[i] + old_carry) % 10;
         }
 
-        if (addOne) {
+        if (carry) {
             digits.insert(digits.begin(), 1);
         }
 

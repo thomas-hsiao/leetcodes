@@ -44,45 +44,35 @@ Constraints:
 */
 
 class Solution {
+private:
+    int cal(std::string &op, int a, int b) {
+        if (op == "+") {
+            return a + b;
+        } else if (op == "-") {
+            return a - b;
+        } else if (op == "*") {
+            return a * b;
+        }
+
+        return a / b;
+    }
 public:
     int evalRPN(vector<string>& tokens) {
-        std::vector<long> stack;
-        std::string::size_type result;
-        std::string symbols = "+-*/";
-        long num01 = 0;
-        long num02 = 0;
-        long cal = 0;
-        
-        for (std::string token : tokens) {
-            result = symbols.find(token);
-            
-            if (result == std::string::npos) {
-                stack.push_back(std::stoi(token));
-                continue;
-            }
-            
-            num02 = stack.back();
-            stack.pop_back();
-            num01 = stack.back();
-            stack.pop_back();
-            
-            cal = 0;
-            
-            if ((token.compare("+")) == 0) {
-                cal = num01 + num02;
-            } else if ((token.compare("-")) == 0) {
-                cal = num01 - num02;
-            } else if ((token.compare("*")) == 0) {
-                cal = num01 * num02;
-            } else if ((token.compare("/")) == 0) {
-                cal = num01 / num02;
+        std::stack<int> stack;
+
+        for (int i = 0; i < tokens.size(); ++i) {
+            if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/") {
+                int b = stack.top();
+                stack.pop();
+                int a = stack.top();
+                stack.pop();
+                int val = cal(tokens[i], a, b);
+                stack.push(val);
             } else {
-                continue;
+                stack.push(std::stoi(tokens[i]));
             }
-            
-            stack.push_back(cal);
         }
-        
-        return (int)stack.back();
+
+        return stack.top();
     }
 };
