@@ -27,112 +27,45 @@ Constraints:
 
 */
 
-class Bucket {
-public:
-    bool used = false;
-    int minVal = std::numeric_limits<int>::max();
-    int maxVal = std::numeric_limits<int>::min();
-};
-
 class Solution {
 public:
     int maximumGap(vector<int>& nums) {
-        //edge case
-        if (nums.size() < 2) {
-            return 0;
+        int n = nums.size();
+        if (n < 2) return 0;
+
+        int min_val = INT_MAX;
+        int max_val = INT_MIN;
+        for (int i = 0; i < n; ++i) {
+            min_val = std::min(min_val, nums[i]);
+            max_val = std::max(max_val, nums[i]);
         }
 
-        
-        //using comparison sort
-        /*
-        int max_diff = 0;
-        std::sort(nums.begin(), nums.end());
+        if (min_val == max_val) return 0;
 
-        for (int i = 1; i < nums.size(); ++i) {
-            max_diff = std::max(max_diff, nums[i] - nums[i - 1]);
+        int width = std::max(1, (max_val - min_val + (n -2 )) / (n - 1));
+        int buckets = (max_val - min_val) / width + 1;
+        std::vector<int> bucket_min(buckets, INT_MAX);
+        std::vector<int> bucket_max(buckets, INT_MIN);
+        std::vector<int> used(buckets);
+
+        for (int v : nums) {
+            int i = (v - min_val) / width;
+            used[i] = true;
+            bucket_min[i] = std::min(bucket_min[i], v);
+            bucket_max[i] = std::max(bucket_max[i], v);
         }
 
-        return max_diff;
-        */
+        int ans = 0;
+        int prev_max = min_val;
+        bool prev_set;
+        for (int i = 0; i < buckets; ++i) {
+            if (!used[i]) continue;
 
-        //the requirement is O(n)
-
-        /*
-        //using radix sort
-        int max_val = *std::max_element(nums.begin(), nums.end());
-        int exp = 1;
-        int radix = 10;
-
-        std::vector<int> aux(nums.size());
-
-        while (max_val / exp > 0) {
-            std::vector<int> count(radix, 0);
-
-            //counting sort here
-            for (int i = 0; i < nums.size(); ++i) {
-                //get the digit after dividing by exp e.g 1, 10, 100
-                int digit = (nums[i] / exp) % 10;   
-                ++count[digit];
-            }
-
-            //finding every position from counting result
-            for (int i = 1; i < count.size(); ++i) {
-                count[i] += count[i - 1];
-            }
-
-            //put nums[i] into their position
-            for (int i = nums.size() - 1; i > -1; --i) {
-                int digit = (nums[i] / exp) % 10;
-                int pos = --count[digit];
-
-                aux[pos] = nums[i];
-            }
-
-            //put aux[i] into original array nums[i]
-            for (int i = 0; i < nums.size(); ++i) {
-                nums[i] = aux[i];
-            }
-
-            exp *= 10;
+            if (prev_set) ans = std::max(ans, bucket_min[i] - prev_max);
+            prev_max = bucket_max[i];
+            prev_set = true;
         }
 
-        int max_diff = 0;
-
-        for (int i = 1; i < nums.size(); ++i) {
-            max_diff = std::max(max_diff, nums[i] - nums[i - 1]);
-        }
-
-        return max_diff;
-        */
-
-        //using bucket sort
-        int min = *std::min_element(nums.begin(), nums.end());
-        int max = *std::max_element(nums.begin(), nums.end());
-
-        int bucketSize = std::max(1, (max - min) / ((int)nums.size() - 1));
-        int bucketNum = (max - min) / bucketSize + 1;
-
-        std::vector<Bucket> buckets(bucketNum);
-
-        for (auto num : nums) {
-            int bucketIndex = (num - min) / bucketSize;
-
-            buckets[bucketIndex].used = true;
-            buckets[bucketIndex].minVal = std::min(num, buckets[bucketIndex].minVal);
-            buckets[bucketIndex].maxVal = std::max(num, buckets[bucketIndex].maxVal);
-        }
-
-        int max_diff = 0;
-        int prevBucketMax = min;
-        for (auto bucket : buckets) {
-            if (!bucket.used) {
-                continue;
-            }
-
-            max_diff = std::max(max_diff, bucket.minVal - prevBucketMax);
-            prevBucketMax = bucket.maxVal;
-        }
-
-        return max_diff;
+        return ans;
     }
 };

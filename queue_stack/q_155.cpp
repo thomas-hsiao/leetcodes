@@ -45,41 +45,32 @@ Constraints:
 
 
 class MinStack {
+private:
+    std::stack<std::pair<int, int>> stack;
 public:
     MinStack() {
         
     }
     
     void push(int val) {
-        //record minimum
-        if (min > val) {
-            min = val;
-        }
-        
-        data.push_back(val);
+        int min_val = getMin();
+
+        if (stack.empty() || min_val> val)
+            min_val = val;
+        stack.push({val, min_val});
     }
     
     void pop() {
-        data.pop_back();
-        
-        min = std::numeric_limits<int>::max();
-        for (int curr : data) {
-            if (min > curr) {
-                min = curr;
-            }
-        }
+        stack.pop();
     }
     
     int top() {
-        return data[data.size() - 1];
+        return stack.empty() ? INT_MAX : stack.top().first;
     }
     
     int getMin() {
-        return min;   
+        return stack.empty() ? INT_MAX : stack.top().second;
     }
-private:
-    std::vector<int> data;
-    int min = std::numeric_limits<int>::max();
 };
 
 /**
