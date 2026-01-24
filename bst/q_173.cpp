@@ -60,69 +60,34 @@ Follow up:
  * };
  */
 class BSTIterator {
-private: 
-    //TreeNode* inorder_root;
-    //std::vector<TreeNode*> list;
-    //int i = 0;
-    /*
-    void inorder(TreeNode* p_root) {
-        if (p_root == nullptr) {
-            return;
-        }
+private:
+    std::stack<TreeNode*> stack;
 
-        inorder(p_root->left);
-        list.push_back(p_root);
-        inorder(p_root->right);
-    }*/
-
-    void inorder_left(TreeNode* p_root) {
-        TreeNode* now = p_root;
-        s.push(now);
-
-        while (now->left != nullptr) {
-            s.push(now->left);
-
+    void go_left(TreeNode* now) {
+        while (now != nullptr) {
+            stack.push(now);
             now = now->left;
         }
     }
-
-    std::stack<TreeNode*> s;
-
 public:
     BSTIterator(TreeNode* root) {
-
-        inorder_left(root);
-
-        //inorder(root);
+        TreeNode* curr = root;
+        go_left(curr);
     }
     
     int next() {
-        /*
-        int index = i;
-        ++i;
+        TreeNode* curr = stack.top();
+        stack.pop();
 
-        return list[index]->val;
-        */
-        TreeNode* now = s.top();
-        s.pop();
-
-        if (now->right != nullptr) {
-            inorder_left(now->right);
+        if (curr->right != nullptr) {
+            go_left(curr->right);
         }
 
-        return now->val;
+        return curr->val;
     }
     
     bool hasNext() {
-        /*
-        if (i == list.size()) {
-            return false;
-        }
-
-        return true;
-        */
-
-        return !s.empty();
+        return !stack.empty();
     }
 };
 

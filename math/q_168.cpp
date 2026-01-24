@@ -41,21 +41,17 @@ Constraints:
 class Solution {
 public:
     string convertToTitle(int columnNumber) {
+        if (columnNumber <= 26) return std::string(1, ('A' + columnNumber - 1));
+
         std::string ans;
-
-        if (columnNumber <= 26) {
-            ans += std::string(1, 'A' + columnNumber - 1);
-            return ans;
-        }
-
         while (columnNumber > 0) {
             --columnNumber;
-            ans += static_cast<char>(columnNumber % 26 + 'A');
+            ans += 'A' + columnNumber % 26;
             columnNumber /= 26;
         }
 
         std::reverse(ans.begin(), ans.end());
-        
+
         return ans;
     }
 };

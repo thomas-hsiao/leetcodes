@@ -28,41 +28,20 @@ Constraints:
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
-        int N = nums.size();
-        int cnt = 1;
-        int element = nums[0];
-
-        for (int i = 1; i < N; ++i) {
-            if (nums[i] == element) {
-                ++cnt;
-            } else {
-                --cnt;
-
-                if (cnt == 0) {
-                    element = nums[i];
-                    cnt = 1;
-                }
-            }
-        }
-
-        return element;
-        /*
-        
-        std::unordered_map<int, int> m;
+        int vote = 0;
+        int major = 0;
 
         for (int n : nums) {
-            ++m[n];
-        }
-
-        int maxCnt = 0;
-        int M = 0;
-        for (const auto& p : m) {
-            if (p.second > maxCnt && p.second > N / 2) {
-                M = p.first;
+            if (!vote) {
+                major = n;
+                ++vote;
+            } else if (major == n) {
+                ++vote;
+            } else {
+                --vote;
             }
         }
 
-        return M;
-        */
+        return major;
     }
 };

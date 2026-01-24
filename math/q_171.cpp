@@ -44,18 +44,15 @@ class Solution {
 public:
     int titleToNumber(string columnTitle) {
         int n = columnTitle.size();
-        if (n == 1) {
-            return columnTitle[0] - 'A' + 1;
-        }
+        if (n == 1) return columnTitle[0] - 'A' + 1;
 
-        int vals = 0;
+        int ans = 0;
         int pow = n - 1;
         for (int i = 0; i < n - 1; ++i) {
-            vals += static_cast<int>(std::pow(26, pow)) * (columnTitle[i] - 'A' + 1);
+            ans += std::pow(26, pow) * (columnTitle[i] - 'A' + 1);
             --pow;
         }
 
-        vals += columnTitle[n - 1] - 'A' + 1;
-        return vals;
+        return ans + (columnTitle[n - 1] - 'A' + 1);
     }
 };
