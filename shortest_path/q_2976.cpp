@@ -37,7 +37,7 @@ Explanation: It is impossible to convert source to target because the value at i
 
 Constraints:
 
-    1 <= source.length == target.length <= 105
+    1 <= source.length == target.length <= 10^5
     source, target consist of lowercase English letters.
     1 <= cost.length == original.length == changed.length <= 2000
     original[i], changed[i] are lowercase English letters.
@@ -52,24 +52,28 @@ private:
     long long by_floyd_warshall(string& source, string& target, vector<char>& original, vector<char>& changed, vector<int>& cost) {
 
         
-        std::vector<std::vector<long long>> min_cost(26, std::vector<long long>(26, INT_MAX));
+        std::vector<std::vector<int>> min_cost(26, std::vector<int>(26, INT_MAX));
 
         for (int i = 0; i < original.size(); ++i) {
             int s = original[i] - 'a';
             int e = changed[i] - 'a';
 
-            min_cost[s][e] = std::min(min_cost[s][e], (long long)cost[i]);
+            min_cost[s][e] = std::min(min_cost[s][e], (int)cost[i]);
         }
 
         for (int k = 0; k < 26; ++k) {
             for (int i = 0; i < 26; ++i) {
+                if (min_cost[i][k] == INT_MAX) continue;
+
                 for (int j = 0; j < 26; ++j) {
+                    if (min_cost[k][j] == INT_MAX) continue;
+
                     min_cost[i][j] = std::min(min_cost[i][j], min_cost[i][k] + min_cost[k][j]);
                 }
             }
         }
 
-        long long ans = 0;
+        long ans = 0;
         for (int i = 0; i < source.size(); ++i) {
             if (source[i] == target[i]) {
                 continue;
@@ -95,14 +99,14 @@ private:
             adj[original[i] - 'a'].push_back({changed[i] - 'a', cost[i]});
         }
 
-        std::vector<std::vector<long long>> min_cost(26, std::vector<long long>(26, -1));
+        std::vector<std::vector<int>> min_cost(26, std::vector<int>(26, -1));
 
         for (int i = 0; i < 26; ++i) {
 
             //doing dijkstra
-            std::priority_queue<std::pair<long long, int>, 
-                                std::vector<std::pair<long long, int>>, 
-                                std::greater<std::pair<long long, int>>> pq;
+            std::priority_queue<std::pair<int, int>, 
+                                std::vector<std::pair<int, int>>, 
+                                std::greater<std::pair<int, int>>> pq;
 
             pq.push({0, i});
             while (!pq.empty()) {
@@ -114,7 +118,7 @@ private:
                 }
 
                 for (auto& [target_i, convert_cost] : adj[curr_i]) {
-                    long long new_cost = curr_cost + convert_cost;
+                    int new_cost = curr_cost + convert_cost;
 
                     if (min_cost[i][target_i] == -1 || new_cost < min_cost[i][target_i]) {
                         min_cost[i][target_i] = new_cost;
@@ -125,10 +129,10 @@ private:
             }
         }
 
-        long long ans = 0;
+        long ans = 0;
         for (int i = 0; i < source.size(); ++i) {
             if (source[i] != target[i]) {
-                long long convert_cost = min_cost[source[i] - 'a'][target[i] - 'a'];
+                long convert_cost = min_cost[source[i] - 'a'][target[i] - 'a'];
 
                 if (convert_cost == -1) {
                     return -1;
@@ -143,7 +147,7 @@ private:
 public:
     long long minimumCost(string source, string target, vector<char>& original, vector<char>& changed, vector<int>& cost) {
 
-        return by_dijkstra(source, target, original, changed, cost);
-        //return by_floyd_warshall(source, target, original, changed, cost);
+        //return by_dijkstra(source, target, original, changed, cost);
+        return by_floyd_warshall(source, target, original, changed, cost);
     }
 };

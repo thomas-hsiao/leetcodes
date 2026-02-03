@@ -28,11 +28,12 @@ Constraints:
 class Solution {
 public:
     string largestNumber(vector<int>& nums) {
-        if (nums.size() == 1) {
+        int n = nums.size();
+        if (n == 1) {
             return std::to_string(nums[0]);
         }
 
-        std::vector<std::string> str_nums(nums.size());
+        std::vector<std::string> str_nums(n);
         for (int i = 0; i < nums.size(); ++i) {
             str_nums[i] = std::to_string(nums[i]);
         }
@@ -40,13 +41,13 @@ public:
         std::sort(str_nums.begin(), str_nums.end(), [](std::string& s1, std::string& s2) {
             return s1 + s2 > s2 + s1;
         });
-
+        //all zeros 
         if (str_nums[0] == "0") {
             return "0";
         }
         
         std::string ans;
-        for (int i = 0; i < str_nums.size(); ++i) {
+        for (int i = 0; i < n; ++i) {
             ans += str_nums[i];
         }
 

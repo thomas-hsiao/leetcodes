@@ -45,17 +45,23 @@ Constraints:
 */
 
 class Solution {
-private:
-    
 public:
     int minimumCost(vector<int>& nums) {
+        int n = nums.size();
+        if (n == 3) return nums[0] + nums[1] + nums[2];
         
-        if (nums.size() == 3) {
-            return nums[0] + nums[1] + nums[2];
+        int s2 = INT_MAX;
+        int s3 = INT_MAX;
+
+        for (int i = 1; i < n; ++i) {
+            if (nums[i] < s2) {
+                s3 = s2;
+                s2 = nums[i];
+            } else if (nums[i] < s3) {
+                s3 = nums[i];
+            }
         }
-        
-        std::sort(nums.begin() + 1, nums.end());
-        int sum = nums[0] + nums[1] + nums[2];
-        return sum;
+
+        return nums[0] + s2 + s3;
     }
 };

@@ -39,6 +39,13 @@ Constraints:
 class Solution {
 public:
     char nextGreatestLetter(vector<char>& letters, char target) {
+        class Solution {
+        int n = letters.size();
+        if (letters[n - 1] <= target || letters[0] > target) return letters[0];
+        
+        int i = std::upper_bound(letters.begin(), letters.end(), target) - letters.begin();
+        return letters[i];        
+        /*
         int N = letters.size();
         int left = 0;
         int right = N - 1;
@@ -58,5 +65,6 @@ public:
         }
 
         return (left == N) ? letters[0] : letters[left];
+        */
     }
 };
