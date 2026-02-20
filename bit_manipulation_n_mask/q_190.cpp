@@ -32,13 +32,16 @@ class Solution {
 public:
     uint32_t reverseBits(uint32_t n) {
         /* method 1, the point is (n & 1) << power!!!!
-        uint32_t ret = 0, power = 31;
-        while (n != 0) {
-          ret += (n & 1) << power;
-          n = n >> 1;
-          power -= 1;
+        uint val = 0;
+        int len = 31;
+
+        while (n > 0) {
+            val += (n & 1) << len;
+            n >>= 1;
+            --len;
         }
-        return ret;
+
+        return val;
         */
         
         //method 2 by Byte

@@ -34,6 +34,25 @@ Constraints:
 
 */
 
+
+class Solution {
+public:
+    vector<string> readBinaryWatch(int turnedOn) {
+        std::vector<std::string> ans;
+
+        for (int i = 0; i < 1024; ++i) {
+            int h = i >> 6;
+            int m = i & 63;
+
+            if (h < 12 && m < 60 && __builtin_popcount(i) == turnedOn) {
+                ans.push_back(std::to_string(h) + ":" + (m < 10 ? "0" : "") + std::to_string(m));
+            }
+        }
+
+        return ans;
+    }
+};
+/*
 class Solution {
 private:
     void backtrack(int hr, int min, int i, int turnedOnRemain, 
@@ -71,7 +90,7 @@ public:
     vector<string> readBinaryWatch(int turnedOn) {
 
         //bit mask
-        /*
+        
         vector<string>ans;
         for(int hr = 0; hr < 12; hr++){
             for(int min = 0; min < 60;min++){
@@ -86,10 +105,10 @@ public:
             }
         }
         return ans;
-        */
+        
 
         //dp
-        /*
+        
         vector<int>dp(60,0);
         vector<string>ans;
         for(int i=1;i<60;i++)
@@ -112,7 +131,7 @@ public:
             }
         } 
         return ans;   
-        */
+        
 
         //backtrack
         std::vector<int> hour = { 1,2,4,8 };
@@ -124,3 +143,4 @@ public:
         return res;
     }
 };
+*/
