@@ -36,6 +36,7 @@ Constraints:
 class Solution {
 public:
     string findDifferentBinaryString(vector<string>& nums) {
+        /*
         int b_len = nums[0].size();
         int n = nums.size();
         std::unordered_set<int> nums_set;
@@ -65,5 +66,15 @@ public:
         }
 
         return "";
+        */
+        
+        //better!
+        string ans;
+        for (int i = 0; i < nums.size(); i++) {
+            char curr = nums[i][i];
+            ans += curr == '0' ? '1' : '0';
+        }
+        
+        return ans;
     }
 };
