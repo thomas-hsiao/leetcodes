@@ -66,7 +66,7 @@ public:
 	    // Initialize any member here.
 	    // **DO NOT** save a copy of nums and manipulate it directly.
 	    // You should only use the Iterator interface methods.
-        has_next = Iterator::hasNext();
+        has_next = Iterator::hasNext();     // using this way to call method in parent!!!
         if (has_next) {
             val = Iterator::next();
         }
