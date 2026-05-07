@@ -37,42 +37,30 @@ Constraints:
 class Solution {
 public:
     bool wordPattern(string pattern, string s) {
-        std::unordered_map<char, std::string> m1;
-        std::unordered_map<std::string, char> m2;
-
-        int word_begin = 0;
-        int word_cnt = 0;
-        int i;
-        for (i = 0; i < pattern.size(); ++i) {
-
-            if (word_begin >= s.size()) {
-                break;
-            }
-
-            int e = word_begin;
-            while (e < s.size() && s[e] != ' ') {
-                ++e;
-            }
-
-            std::string w = s.substr(word_begin, e - word_begin);
-
-            if (m1.find(pattern[i]) == m1.end()) {
-
-                if (m2.find(w) == m2.end()) {
-                    m1[pattern[i]] = w;
-                    m2[w] = pattern[i];
-                } else {
-                    return false;
-                }
-                
-            } else if (m2[w] != pattern[i]) {
-                return false;
-            }
-
-            word_begin = e + 1;
-            ++word_cnt;
+        std::vector<std::string> words;
+        std::stringstream ss(s);
+        std::string w;
+        while (ss >> w) {
+            words.push_back(w);
         }
 
-        return i == pattern.size() && word_begin >= s.size();
+        if (pattern.size() != words.size()) return false;
+
+        std::unordered_map<char, std::string> c_to_w;
+        std::unordered_map<std::string, char> w_to_c;
+
+        for (int i = 0; i < pattern.size(); ++i) {
+            char c = pattern[i];
+            std::string w = words[i];
+
+            if (c_to_w.count(c) && c_to_w[c] != w) return false;
+
+            if (w_to_c.count(w) && w_to_c[w] != c) return false;
+
+            c_to_w[c] = w;
+            w_to_c[w] = c;
+        }
+
+        return true;
     }
 };

@@ -29,42 +29,40 @@ Constraints:
 
 class Solution {
 private:
-    const std::vector<std::string> first_19{ "", "One", "Two", "Three", "Four", "Five", 
-                                            "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", 
-                                            "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", 
-                                            "Seventeen",  "Eighteen", "Nineteen" };
-    const std::vector<std::string> two_digits{"", "", "Twenty", "Thirty", "Forty", "Fifty", 
-                                                    "Sixty", "Seventy", "Eighty", "Ninety" };
-    const std::vector<std::string> three_digits{ "", "Thousand", "Million", "Billion" };
+    const std::string first_19[20] {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", 
+                                    "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", 
+                                    "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", 
+                                    "Nineteen"};
+    const std::string two_digits[10] {"", "", "Twenty", "Thirty", "Forty", "Fifty", 
+                                        "Sixty", "Seventy", "Eighty", "Ninety"};
+    const std::string three_digits[4] {"", "Thousand", "Million", "Billion"};
 
-    std::string recursive(int n) {
+    std::string d_to_s(int n) {
         if (n == 0) {
             return "";
         } else if (n < 20) {
             return first_19[n] + " ";
         } else if (n < 100) {
-            return two_digits[n / 10] + " " + recursive(n % 10);
+            return two_digits[n / 10] + " " + d_to_s(n % 10);
         }
 
-        return first_19[n / 100] + " Hundred " + recursive(n % 100);
+        return first_19[n / 100] + " Hundred " + d_to_s(n % 100);
     }
 public:
     string numberToWords(int num) {
-        if (num == 0) {
-            return "Zero";
-        }
+        if (num == 0) return "Zero";
 
         std::string ans = "";
         int i = 0;
         while (num > 0) {
             if (num % 1000 != 0) {
-                ans = recursive(num % 1000) + three_digits[i] + " " + ans;
+                ans = d_to_s(num % 1000) + three_digits[i] + " " + ans;
             }
 
             num /= 1000;
             ++i;
         }
-        
+
         while (ans.back() == ' ') ans.pop_back();
         return ans;
     }
